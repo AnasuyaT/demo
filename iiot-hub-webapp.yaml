@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iiot-hub-webapp
+  namespace: core-namespace
+  labels:
+    app: iiot-hub-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iiot-hub-webapp
+  template:
+    metadata:
+      labels:
+        app: iiot-hub-webapp
+    spec:
+      containers:
+      - name: iiot-hub-webapp
+        image: iiotlaabs.azurecr.io/iiot-hub-webapp
+        ports:
+        - containerPort: 8085
+      imagePullSecrets:
+      - name: cr-secret
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: iiot-hub-webapp
+  namespace: core-namespace
+spec:
+  type: ClusterIP
+  selector:
+    app: iiot-hub-webapp
+  ports:
+    - port: 80

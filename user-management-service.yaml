@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-management-service
+  namespace: core-namespace
+  labels:
+    app: user-management-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-management-service
+  template:
+    metadata:
+      labels:
+        app: user-management-service
+    spec:
+      containers:
+      - name: user-management-service
+        image: iiotlaabs.azurecr.io/iiot-hub-server/user-management-service
+        ports:
+        - containerPort: 8081
+      imagePullSecrets:
+      - name: cr-secret
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: user-management-service
+  namespace: core-namespace
+spec:
+  type: ClusterIP
+  selector:
+    app: user-management-service
+  ports:
+    - port: 80
+      targetPort: 8080
